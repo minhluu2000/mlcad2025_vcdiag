@@ -1,0 +1,244 @@
+{
+    "general": {
+        "verbose": true,
+        "clean_environment_setup": true,
+        "acceptance_threshold": 4,
+        "label_mapping": {
+            "FSNBIN": "FullSpeedNonBufferedIn",
+            "FSNBOU": "FullSpeedNonBufferedOut",
+            "FSRX": "FullSpeedReceive",
+            "FSX": "FullSpeedTransmit",
+            "FSXMUX": "FullSpeedTransmitMux",
+            "DEVAON": "DeviceActiveOn",
+            "DEVIOMUX": "DeviceIOMux",
+            "DEVLINK": "DeviceLinkState"
+        }
+    },
+    "sim_and_extract": {
+        "ip_name": "usbdev",
+        "hjson_name": "usbdev_sim_cfg",
+        "test_list_name": "all",
+        "nfailures_before_stop": 1,
+        "print_interval": 30,
+        "additional_flags": "--verbose debug --run-timeout-mins 10",
+        "extract": {
+            "time_tag_before_failure_percent": 2,
+            "time_tag_before_failure_min": 0,
+            "time_tag_before_failure_max": 100000000,
+            "scaling_adjustment": 100,
+            "line_limit": 1500
+        }
+    },
+    "generate_signals": {
+        "vcd_file_path": "/mnt/shared-scratch/Hu_J/minh.luu/github/vcdiag_opentitan/designs/opentitan_1/scratch/dev/usbdev-sim-vcs/failed/0.usbdev_link_suspend.95438025296982139292473043254631377649490734155892383614952772885691189371935/0.usbdev_link_suspend.vcd",
+        "verible_verilog_syntax_path": "/mnt/shared-scratch/Hu_J/minh.luu/tools/verible/verible-verilog-syntax",
+        "generate_raw_signals": false,
+        "target_modules": [
+            "usb_fs_nb_in_pe",
+            "usb_fs_nb_out_pe",
+            "usb_fs_rx",
+            "usb_fs_tx",
+            "usb_fs_tx_mux",
+            "usbdev_aon_wake",
+            "usbdev_iomux",
+            "usbdev_linkstate"
+        ],
+        "exclude_keywords": [],
+        "include_keywords": [
+            "usb_fs_nb_in_pe",
+            "usb_fs_nb_out_pe",
+            "usb_fs_rx",
+            "usb_fs_tx",
+            "usb_fs_tx_mux",
+            "usbdev_aon_wake",
+            "usbdev_iomux",
+            "usbdev_linkstate"
+        ]
+    },
+    "generate_bugs": {
+        "bugs_per_try": 2,
+        "retry": 4,
+        "overwrite": true,
+        "clear_bug_inserter_cache": true,
+        "bugs": {
+            "FSNBIN": [
+                {
+                    "filename": "usb_fs_nb_in_pe.sv",
+                    "training_ranges": [
+                        "1-80"
+                    ],
+                    "testing_ranges": [
+                        "1-20"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "135-196",
+                        "198-296",
+                        "302-357",
+                        "360-425"
+                    ]
+                }
+            ],
+            "FSNBOU": [
+                {
+                    "filename": "usb_fs_nb_out_pe.sv",
+                    "training_ranges": [
+                        "1-80"
+                    ],
+                    "testing_ranges": [
+                        "1-20"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "131-203",
+                        "211-318",
+                        "325-385",
+                        "388-437"
+                    ]
+                }
+            ],
+            "FSRX": [
+                {
+                    "filename": "usb_fs_rx.sv",
+                    "training_ranges": [
+                        "1-80"
+                    ],
+                    "testing_ranges": [
+                        "1-20"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "124-186",
+                        "242-358",
+                        "372-512",
+                        "518-671"
+                    ]
+                }
+            ],
+            "FSX": [
+                {
+                    "filename": "usb_fs_tx.sv",
+                    "training_ranges": [
+                        "1-80"
+                    ],
+                    "testing_ranges": [
+                        "1-20"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "86-132",
+                        "138-265",
+                        "269-369",
+                        "373-507"
+                    ]
+                }
+            ],
+            "FSXMUX": [
+                {
+                    "filename": "usb_fs_tx_mux.sv",
+                    "training_ranges": [
+                        "1-10"
+                    ],
+                    "testing_ranges": [
+                        "1-5"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "20-21"
+                    ]
+                }
+            ],
+            "DEVAON": [
+                {
+                    "filename": "usbdev_aon_wake.sv",
+                    "training_ranges": [
+                        "1-80"
+                    ],
+                    "testing_ranges": [
+                        "1-20"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "54-78",
+                        "80-120",
+                        "122-170",
+                        "173-204"
+                    ]
+                }
+            ],
+            "DEVIOMUX": [
+                {
+                    "filename": "usbdev_iomux.sv",
+                    "training_ranges": [
+                        "1-40"
+                    ],
+                    "testing_ranges": [
+                        "1-10"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "56-81",
+                        "87-99",
+                        "106-146"
+                    ]
+                }
+            ],
+            "DEVLINK": [
+                {
+                    "filename": "usbdev_linkstate.sv",
+                    "training_ranges": [
+                        "1-80"
+                    ],
+                    "testing_ranges": [
+                        "1-20"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "92-136",
+                        "138-236",
+                        "244-343",
+                        "347-389"
+                    ]
+                }
+            ]
+        }
+    },
+    "insert_bugs": {
+        "bugs": {}
+    },
+    "data_process": {
+        "copy_raw_data": true,
+        "split_mode": false,
+        "before_failure_timeframe": 500,
+        "pad_value": 0,
+        "ignore_files": {},
+        "sv_logic_values": {
+            "x": 120,
+            "z": 122
+        },
+        "transformer": {
+            "summary_function": [
+                "mean",
+                "min",
+                "max",
+                "std"
+            ],
+            "quantiles": [
+                0.1,
+                0.25,
+                0.5,
+                0.75,
+                0.9
+            ]
+        }
+    },
+    "bug_predict": {}
+}

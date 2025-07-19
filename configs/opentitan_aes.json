@@ -1,0 +1,306 @@
+{
+    "general": {
+        "verbose": true,
+        "clean_environment_setup": true,
+        "acceptance_threshold": 4,
+        "label_mapping": {
+            "ACICONFSM": "CipherControlFSM",
+            "ACICON": "CipherControl",
+            "AESCNR": "AESControl",
+            "AESCNRFSM": "AESControlFSM",
+            "PRNGCLR": "RegisterClearing",
+            "AESKEYEXP": "KeyExpand",
+            "MIXSINGCOL": "MixSingleColumn"
+        }
+    },
+    "sim_and_extract": {
+        "ip_name": "aes",
+        "hjson_name": "aes_masked_sim_cfg",
+        "test_list_name": "all",
+        "nfailures_before_stop": 1,
+        "print_interval": 30,
+        "additional_flags": "--verbose debug --run-timeout-mins 7",
+        "extract": {
+            "time_tag_before_failure_percent": 2,
+            "time_tag_before_failure_min": 0,
+            "time_tag_before_failure_max": 100000000,
+            "scaling_adjustment": 100,
+            "line_limit": 2000
+        }
+    },
+    "generate_signals": {
+        "vcd_file_path": "/mnt/shared-scratch/Hu_J/minh.luu/github/vcdiag/designs/opentitan_1/scratch/main/aes_masked-sim-vcs/failed/0.aes_reseed.88239009006458499588316371117605937206593284899432410290019141208766413297585/0.aes_reseed.vcd",
+        "verible_verilog_syntax_path": "/mnt/shared-scratch/Hu_J/minh.luu/tools/verible/verible-verilog-syntax",
+        "generate_raw_signals": false,
+        "target_modules": [
+            "aes_ctr_fsm",
+            "aes_ctr",
+            "aes_cipher_control_fsm",
+            "aes_cipher_control",
+            "aes_prng_clearing",
+            "aes_key_expand",
+            "aes_mix_single_column"
+        ],
+        "exclude_keywords": [],
+        "include_keywords": []
+    },
+    "generate_bugs": {
+        "bugs_per_try": 2,
+        "retry": 4,
+        "overwrite": false,
+        "clear_bug_inserter_cache": false,
+        "bugs": {}
+    },
+    "insert_bugs": {
+        "bugs": {
+            "ACICONFSM": [
+                {
+                    "filename": "aes_cipher_control_fsm.sv",
+                    "training_ranges": [
+                        "1-90"
+                    ],
+                    "testing_ranges": [
+                        "1-31",
+                        "32-52"
+                    ],
+                    "training_reruns": 6,
+                    "testing_reruns": 3,
+                    "rois": [
+                        "109-149",
+                        "153-212",
+                        "214-255",
+                        "257-317",
+                        "452-462",
+                        "466-480"
+                    ]
+                }
+            ],
+            "ACICON": [
+                {
+                    "filename": "aes_cipher_control.sv",
+                    "training_ranges": [
+                        "1-90"
+                    ],
+                    "testing_ranges": [
+                        "1-19",
+                        "20-40"
+                    ],
+                    "training_reruns": 6,
+                    "testing_reruns": 3,
+                    "rois": [
+                        "283-293",
+                        "297-300",
+                        "303-305",
+                        "311-339",
+                        "346-358",
+                        "360-370",
+                        "432-439",
+                        "461-469"
+                    ]
+                }
+            ],
+            "AESCNR": [
+                {
+                    "filename": "aes_ctr.sv",
+                    "training_ranges": [
+                        "1-90"
+                    ],
+                    "testing_ranges": [
+                        "1-15",
+                        "16-36"
+                    ],
+                    "training_reruns": 6,
+                    "testing_reruns": 3,
+                    "rois": [
+                        "25-40",
+                        "73-89",
+                        "108-142",
+                        "154-170",
+                        "177-190"
+                    ]
+                }
+            ],
+            "AESCNRFSM": [
+                {
+                    "filename": "aes_ctr_fsm.sv",
+                    "training_ranges": [
+                        "1-90"
+                    ],
+                    "testing_ranges": [
+                        "1-10",
+                        "11-30"
+                    ],
+                    "training_reruns": 6,
+                    "testing_reruns": 3,
+                    "rois": [
+                        "38-39",
+                        "46-98",
+                        "101-109"
+                    ]
+                }
+            ],
+            "PRNGCLR": [
+                {
+                    "filename": "aes_prng_clearing.sv",
+                    "training_ranges": [
+                        "1-90"
+                    ],
+                    "testing_ranges": [
+                        "1-13",
+                        "14-34"
+                    ],
+                    "training_reruns": 6,
+                    "testing_reruns": 3,
+                    "rois": [
+                        "58-62",
+                        "66-91",
+                        "94-115",
+                        "127-142"
+                    ]
+                }
+            ],
+            "AESKEYEXP": [
+                {
+                    "filename": "aes_key_expand.sv",
+                    "training_ranges": [
+                        "1-90"
+                    ],
+                    "testing_ranges": [
+                        "1-28",
+                        "29-49"
+                    ],
+                    "training_reruns": 6,
+                    "testing_reruns": 3,
+                    "rois": [
+                        "63-191",
+                        "194-245",
+                        "251-291",
+                        "299-434"
+                    ]
+                }
+            ],
+            "MIXSINGCOL": [
+                {
+                    "filename": "aes_mix_single_column.sv",
+                    "training_ranges": [
+                        "1-90"
+                    ],
+                    "testing_ranges": [
+                        "1-18",
+                        "19-38"
+                    ],
+                    "training_reruns": 6,
+                    "testing_reruns": 3,
+                    "rois": [
+                        "29-32",
+                        "35-46",
+                        "49-68"
+                    ]
+                }
+            ]
+        }
+    },
+    "data_process": {
+        "copy_raw_data": true,
+        "split_mode": false,
+        "before_failure_timeframe": 500,
+        "pad_value": 0,
+        "ignore_files": {
+            "ACICONFSM": [
+                {
+                    "filename": "aes_cipher_control_fsm.sv",
+                    "training_ranges": [],
+                    "testing_ranges": [
+                        "1-31"
+                    ]
+                }
+            ],
+            "ACICON": [
+                {
+                    "filename": "aes_cipher_control.sv",
+                    "training_ranges": [],
+                    "testing_ranges": [
+                        "1-19"
+                    ],
+                    "training_reruns": 6,
+                    "testing_reruns": 3
+                }
+            ],
+            "AESCNR": [
+                {
+                    "filename": "aes_ctr.sv",
+                    "training_ranges": [],
+                    "testing_ranges": [
+                        "1-15"
+                    ],
+                    "training_reruns": 6,
+                    "testing_reruns": 3
+                }
+            ],
+            "AESCNRFSM": [
+                {
+                    "filename": "aes_ctr_fsm.sv",
+                    "training_ranges": [],
+                    "testing_ranges": [
+                        "1-10"
+                    ],
+                    "training_reruns": 6,
+                    "testing_reruns": 3
+                }
+            ],
+            "PRNGCLR": [
+                {
+                    "filename": "aes_prng_clearing.sv",
+                    "training_ranges": [],
+                    "testing_ranges": [
+                        "1-13"
+                    ],
+                    "training_reruns": 6,
+                    "testing_reruns": 3
+                }
+            ],
+            "AESKEYEXP": [
+                {
+                    "filename": "aes_key_expand.sv",
+                    "training_ranges": [],
+                    "testing_ranges": [
+                        "1-28"
+                    ],
+                    "training_reruns": 6,
+                    "testing_reruns": 3
+                }
+            ],
+            "MIXSINGCOL": [
+                {
+                    "filename": "aes_mix_single_column.sv",
+                    "training_ranges": [],
+                    "testing_ranges": [
+                        "1-18"
+                    ],
+                    "training_reruns": 6,
+                    "testing_reruns": 3
+                }
+            ]
+        },
+        "sv_logic_values": {
+            "x": 120,
+            "z": 122
+        },
+        "transformer": {
+            "summary_function": [
+                "mean",
+                "min",
+                "max",
+                "std"
+            ],
+            "quantiles": [
+                0.1,
+                0.25,
+                0.5,
+                0.75,
+                0.9
+            ]
+        }
+    },
+    "bug_predict": {}
+}

@@ -1,0 +1,288 @@
+{
+    "general": {
+        "verbose": true,
+        "clean_environment_setup": true,
+        "acceptance_threshold": 2,
+        "label_mapping": {
+            "FECHONE": "FetchStage1",
+            "FECHWO": "FetchStage2",
+            "DECODE": "Decode",
+            "INSBUF": "InstructionBuffer",
+            "RENAME": "Rename",
+            "DISP": "Dispatch",
+            "ISSUE": "IssueQueue",
+            "REGREAD": "RegRead",
+            "EXEC": "Execution",
+            "LSU": "LoadStoreUnit",
+            "REIRE": "Retire",
+            "MAPABLE": "ArchMapTable"
+        }
+    },
+    "sim_and_extract": {
+        "sim_timeout": 75,
+        "extract": {
+            "line_limit": 2000
+        }
+    },
+    "generate_signals": {
+        "vcd_file_path": "/mnt/shared-scratch/Hu_J/minh.luu/github/vcdiag/designs/opentitan_1/scratch/main/aes_masked-sim-vcs/failed/0.aes_reseed.88239009006458499588316371117605937206593284899432410290019141208766413297585/0.aes_reseed.vcd",
+        "verible_verilog_syntax_path": "/mnt/shared-scratch/Hu_J/minh.luu/tools/verible/verible-verilog-syntax",
+        "generate_raw_signals": false,
+        "target_modules": [],
+        "exclude_keywords": [],
+        "include_keywords": []
+    },
+    "generate_bugs": {
+        "bugs_per_try": 2,
+        "retry": 4,
+        "overwrite": true,
+        "clear_bug_inserter_cache": false,
+        "bugs": {}
+    },
+    "insert_bugs": {
+        "bugs": {
+            "FECHONE": [
+                {
+                    "filename": "FetchStage1.v",
+                    "training_ranges": [
+                        "1-70",
+                        "71-120"
+                    ],
+                    "testing_ranges": [
+                        "28-48"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                }
+            ],
+            "FECHWO": [
+                {
+                    "filename": "FetchStage2.v",
+                    "training_ranges": [
+                        "1-70",
+                        "71-120"
+                    ],
+                    "testing_ranges": [
+                        "29-49"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                }
+            ],
+            "DECODE": [
+                {
+                    "filename": "Decode.v",
+                    "training_ranges": [
+                        "1-60"
+                    ],
+                    "testing_ranges": [
+                        "28-38"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                },
+                {
+                    "filename": "Decode_PISA.v",
+                    "training_ranges": [
+                        "61-120"
+                    ],
+                    "testing_ranges": [
+                        "39-49"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                }
+            ],
+            "INSBUF": [
+                {
+                    "filename": "InstructionBuffer.v",
+                    "training_ranges": [
+                        "1-80",
+                        "81-120"
+                    ],
+                    "testing_ranges": [
+                        "1-20"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                }
+            ],
+            "RENAME": [
+                {
+                    "filename": "SpecFreeList.v",
+                    "training_ranges": [
+                        "1-40",
+                        "41-60"
+                    ],
+                    "testing_ranges": [
+                        "35-44"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                },
+                {
+                    "filename": "RenameMapTable.v",
+                    "training_ranges": [
+                        "61-120"
+                    ],
+                    "testing_ranges": [
+                        "45-55"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                }
+            ],
+            "DISP": [
+                {
+                    "filename": "Dispatch.v",
+                    "training_ranges": [
+                        "1-70",
+                        "71-120"
+                    ],
+                    "testing_ranges": [
+                        "39-59"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                }
+            ],
+            "ISSUE": [
+                {
+                    "filename": "IssueQueue.v",
+                    "training_ranges": [
+                        "1-70",
+                        "71-120"
+                    ],
+                    "testing_ranges": [
+                        "50-70"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                }
+            ],
+            "REGREAD": [
+                {
+                    "filename": "RegRead.v",
+                    "training_ranges": [
+                        "1-70",
+                        "71-120"
+                    ],
+                    "testing_ranges": [
+                        "32-52"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                }
+            ],
+            "EXEC": [
+                {
+                    "filename": "Complex_ALU.v",
+                    "training_ranges": [
+                        "1-40"
+                    ],
+                    "testing_ranges": [
+                        "32-42"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                },
+                {
+                    "filename": "Ctrl_ALU.v",
+                    "training_ranges": [
+                        "41-80"
+                    ],
+                    "testing_ranges": [
+                        "43-53"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                },
+                {
+                    "filename": "Simple_ALU.v",
+                    "training_ranges": [
+                        "81-120"
+                    ],
+                    "testing_ranges": [
+                        "54-64"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                }
+            ],
+            "LSU": [
+                {
+                    "filename": "LoadStoreUnit.v",
+                    "training_ranges": [
+                        "1-70",
+                        "71-120"
+                    ],
+                    "testing_ranges": [
+                        "42-62"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                }
+            ],
+            "REIRE": [
+                {
+                    "filename": "ActiveList.v",
+                    "training_ranges": [
+                        "1-60"
+                    ],
+                    "testing_ranges": [
+                        "46-56"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                },
+                {
+                    "filename": "WriteBack.v",
+                    "training_ranges": [
+                        "61-120"
+                    ],
+                    "testing_ranges": [
+                        "57-67"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                }
+            ],
+            "MAPABLE": [
+                {
+                    "filename": "ArchMapTable.v",
+                    "training_ranges": [
+                        "1-70",
+                        "71-120"
+                    ],
+                    "testing_ranges": [
+                        "23-43"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                }
+            ]
+        }
+    },
+    "data_process": {
+        "copy_raw_data": true,
+        "split_mode": false,
+        "before_failure_timeframe": 500,
+        "pad_value": 0,
+        "ignore_files": [],
+        "sv_logic_values": {
+            "x": 120,
+            "z": 122
+        },
+        "transformer": {
+            "summary_function": [
+                "mean",
+                "std"
+            ],
+            "quantiles": [
+                0.01,
+                0.99
+            ]
+        }
+    },
+    "bug_predict": {}
+}

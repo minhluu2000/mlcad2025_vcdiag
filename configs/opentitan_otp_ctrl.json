@@ -1,0 +1,190 @@
+{
+    "general": {
+        "verbose": true,
+        "clean_environment_setup": true,
+        "acceptance_threshold": 4,
+        "label_mapping": {
+            "DAI": "OtpCtrlDai",
+            "ECCREG": "OtpCtrlEccReg",
+            "KDI": "OtpCtrlKdi",
+            "LCI": "OtpCtrlLci",
+            "LFSR": "OtpCtrlLfsrTimer",
+            "SCRMBL": "OtpCtrlScrmbl"
+        }
+    },
+    "sim_and_extract": {
+        "ip_name": "otp_ctrl",
+        "hjson_name": "otp_ctrl_sim_cfg",
+        "test_list_name": "all",
+        "nfailures_before_stop": 1,
+        "print_interval": 30,
+        "additional_flags": "--verbose debug --run-timeout-mins 10",
+        "extract": {
+            "time_tag_before_failure_percent": 2,
+            "time_tag_before_failure_min": 0,
+            "time_tag_before_failure_max": 100000000,
+            "scaling_adjustment": 100,
+            "line_limit": 1500
+        }
+    },
+    "generate_signals": {
+        "vcd_file_path": "/mnt/shared-scratch/Hu_J/minh.luu/github/vcdiag_opentitan/designs/opentitan_1/scratch/dev/otp_ctrl-sim-vcs/failed/0.otp_ctrl_partition_walk.96923913755674781598502384755104182828339852596002944817286766079915026321436/0.otp_ctrl_partition_walk.vcd",
+        "verible_verilog_syntax_path": "/mnt/shared-scratch/Hu_J/minh.luu/tools/verible/verible-verilog-syntax",
+        "generate_raw_signals": true,
+        "target_modules": [
+            "otp_ctrl_dai",
+            "otp_ctrl_ecc_reg",
+            "otp_ctrl_kdi",
+            "otp_ctrl_lci",
+            "otp_ctrl_lfsr_timer",
+            "otp_ctrl_scrmbl"
+        ],
+        "exclude_keywords": [],
+        "include_keywords": []
+    },
+    "generate_bugs": {
+        "bugs_per_try": 3,
+        "retry": 4,
+        "overwrite": true,
+        "clear_bug_inserter_cache": true,
+        "bugs": {
+            "DAI": [
+                {
+                    "filename": "otp_ctrl_dai.sv",
+                    "training_ranges": [
+                        "1-70"
+                    ],
+                    "testing_ranges": [
+                        "1-20"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "168-184",
+                        "186-691",
+                        "703-725",
+                        "751-827"
+                    ]
+                }
+            ],
+            "ECCREG": [
+                {
+                    "filename": "otp_ctrl_ecc_reg.sv",
+                    "training_ranges": [
+                        "1-40"
+                    ],
+                    "testing_ranges": [
+                        "1-10"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "1-97"
+                    ]
+                }
+            ],
+            "KDI": [
+                {
+                    "filename": "otp_ctrl_kdi.sv",
+                    "training_ranges": [
+                        "1-70"
+                    ],
+                    "testing_ranges": [
+                        "1-20"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "113-171",
+                        "174-354",
+                        "356-567",
+                        "575-585"
+                    ]
+                }
+            ],
+            "LCI": [
+                {
+                    "filename": "otp_ctrl_lci.sv",
+                    "training_ranges": [
+                        "1-70"
+                    ],
+                    "testing_ranges": [
+                        "1-20"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "114-230",
+                        "238-282"
+                    ]
+                }
+            ],
+            "LFSR": [
+                {
+                    "filename": "otp_ctrl_lfsr_timer.sv",
+                    "training_ranges": [
+                        "1-70"
+                    ],
+                    "testing_ranges": [
+                        "1-20"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "70-202",
+                        "231-361",
+                        "369-385"
+                    ]
+                }
+            ],
+            "SCRMBL": [
+                {
+                    "filename": "otp_ctrl_scrmbl.sv",
+                    "training_ranges": [
+                        "1-70"
+                    ],
+                    "testing_ranges": [
+                        "1-20"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1,
+                    "rois": [
+                        "140-299",
+                        "301-438",
+                        "444-508"
+                    ]
+                }
+            ]
+        }
+    },
+    "insert_bugs": {
+        "bugs": {}
+    },
+    "data_process": {
+        "copy_raw_data": true,
+        "split_mode": false,
+        "before_failure_timeframe": 750,
+        "pad_value": 0,
+        "sv_logic_values": {
+            "x": 120,
+            "z": 122
+        },
+        "ignore_files": {},
+        "transformer": {
+            "summary_function": [
+                "mean",
+                "min",
+                "max",
+                "std"
+            ],
+            "quantiles": [
+                0.1,
+                0.25,
+                0.5,
+                0.75,
+                0.9
+            ]
+        }
+    },
+    "bug_predict": {}
+}

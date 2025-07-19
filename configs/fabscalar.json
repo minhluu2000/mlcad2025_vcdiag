@@ -1,0 +1,106 @@
+{
+    "general": {
+        "verbose": true,
+        "clean_environment_setup": true,
+        "acceptance_threshold": 1,
+        "label_mapping": {
+            "FECHONE": "FetchStage1",
+            "FECHWO": "FetchStage2",
+            "DECODE": "Decode",
+            "INSBUF": "InstructionBuffer",
+            "RENAME": "Rename",
+            "DISP": "Dispatch",
+            "ISSUE": "IssueQueue",
+            "REGREAD": "RegRead",
+            "EXEC": "Execution",
+            "LSU": "LoadStoreUnit",
+            "REIRE": "Retire",
+            "MAPABLE": "ArchMapTable"
+        }
+    },
+    "sim_and_extract": {
+        "sim_timeout": 75,
+        "extract": {
+            "line_limit": 2000
+        }
+    },
+    "generate_signals": {
+        "vcd_file_path": "/mnt/shared-scratch/Hu_J/minh.luu/github/vcdiag/designs/opentitan_1/scratch/main/aes_masked-sim-vcs/failed/0.aes_reseed.88239009006458499588316371117605937206593284899432410290019141208766413297585/0.aes_reseed.vcd",
+        "verible_verilog_syntax_path": "/mnt/shared-scratch/Hu_J/minh.luu/tools/verible/verible-verilog-syntax",
+        "generate_raw_signals": false,
+        "target_modules": [],
+        "exclude_keywords": [],
+        "include_keywords": []
+    },
+    "generate_bugs": {
+        "bugs_per_try": 2,
+        "retry": 4,
+        "overwrite": true,
+        "clear_bug_inserter_cache": false,
+        "bugs": {}
+    },
+    "insert_bugs": {
+        "bugs": {
+            "EXEC": [
+                {
+                    "filename": "Complex_ALU.v",
+                    "training_ranges": [
+                        "1-40"
+                    ],
+                    "testing_ranges": [
+                        "32-42"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                },
+                {
+                    "filename": "Ctrl_ALU.v",
+                    "training_ranges": [
+                        "41-80"
+                    ],
+                    "testing_ranges": [
+                        "43-53"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                },
+                {
+                    "filename": "Simple_ALU.v",
+                    "training_ranges": [
+                        "81-120"
+                    ],
+                    "testing_ranges": [
+                        "54-64"
+                    ],
+                    "training_reruns": 2,
+                    "testing_reruns": 1
+                }
+            ]
+        }
+    },
+    "data_process": {
+        "copy_raw_data": true,
+        "split_mode": false,
+        "before_failure_timeframe": 2000,
+        "pad_value": 0,
+        "ignore_files": [],
+        "sv_logic_values": {
+            "x": 120,
+            "z": 122
+        },
+        "transformer": {
+            "summary_function": [
+                "mean",
+                "min",
+                "max",
+                "std"
+            ],
+            "quantiles": [
+                0.1,
+                0.5,
+                0.9
+            ]
+        }
+    },
+    "bug_predict": {}
+}

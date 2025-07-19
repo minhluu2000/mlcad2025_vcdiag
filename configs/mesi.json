@@ -1,0 +1,108 @@
+{
+    "general": {
+        "verbose": true
+    },
+    "sim_and_extract": {
+        "extract": {
+            "line_limit": 2000,
+            "time_tag_before_failure_percent": 50
+        }
+    },
+    "generate_signals": {
+        "initial_signals": true,
+        "target_modules": [
+
+        ]
+    },
+    "generate_bugs": {
+        "retry": 2,
+        "bugs": {
+            "DLPR": [
+                {
+                    "filename": "main_func_lv1_dl.sv",
+                    "training_ranges": [
+                        "1"
+                    ],
+                    "training_reruns": 1,
+                    "testing_ranges": [
+                        
+                    ],
+                    "testing_reruns": 1
+                }
+            ],
+            "DLSN": [
+                {
+                    "filename": "main_func_lv1_dl.sv",
+                    "training_ranges": [
+                   
+                    ],
+                    "training_reruns": 1,
+                    "testing_ranges": [
+     
+                    ],
+                    "testing_reruns": 1
+                }
+            ]
+        }
+    },
+    "insert_bugs": {
+        "bugs": {
+            "DLPR": [
+                {
+                    "filename": "main_func_lv1_dl.sv",
+                    "training_ranges": [
+                        "1"
+                    ],
+                    "training_reruns": 1,
+                    "testing_ranges": [
+                    ],
+                    "testing_reruns": 1
+                }
+            ],
+            "DLSN": [
+                {
+                    "filename": "main_func_lv1_dl.sv",
+                    "training_ranges": [
+                   
+                    ],
+                    "training_reruns": 1,
+                    "testing_ranges": [
+     
+                    ],
+                    "testing_reruns": 1
+                }
+            ]
+        }
+    },
+    "data_process": {
+        "copy_raw_data": true,
+        "split_mode": false,
+        "before_failure_timeframe": 1000,
+        "pad_value": 0,
+        "ignore_files": [
+
+        ],
+        "sv_logic_values": {
+            "x": 120,
+            "z": 122
+        },
+        "transformer": {
+            "summary_function": [
+                "mean",
+                "std",
+                "min",
+                "max",
+                "median",
+                "skew",
+                "kurtosis"
+            ],
+            "quantiles": [
+                0.01,
+                0.05,
+                0.95,
+                0.99
+            ]
+        }
+    },
+    "bug_predict": {}
+}
