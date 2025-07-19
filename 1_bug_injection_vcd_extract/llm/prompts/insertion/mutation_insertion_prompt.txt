@@ -1,0 +1,39 @@
+## TASK
+
+Your job is to insert a {MUTATION_TYPE} mutation (bug) into a line of verilog or system verilog code. You will be provided a detailed description of the type of mutation you must insert along with instructions on how to insert it as well as the line of verilog code in which to inject the mutation.
+
+## Mutation Description
+{MUTATION_DESCRIPTION}
+
+## Input
+### Line to Mutate
+Provided below is the line of verilog code into which you must inject the {MUTATION_TYPE} mutation:
+```
+{VERILOG_LINE}
+```
+
+### Previously SUCCESSFUL {MUTATION_TYPE} Mutations
+The following {MUTATION_TYPE} mutations were already attempted (either in this region or in other regions), and successfully produced syntactically and functionally correct results. This means they passed compilation and were able to trigger a detectable bug through the simulator. You can use this as a reference for correct mutations.
+```
+{PREVIOUS_BUGS_SUCCESS}
+```
+
+### Previously FAILED {MUTATION_TYPE} Mutations
+The following {MUTATION_TYPE} mutations were part of a failing group in the simulator due to a syntax error or a lack of functional utility (meaning no bug was detected). You may use this as a reference to avoid mistakes. However, keep in mind, not every one of these mutations is necessarily invalid.
+```
+{PREVIOUS_BUGS_FAILED}
+```
+
+## Expected Output
+Next, output the following:
+1. An explanation, in a paragraph or less, of how you plan on injecting the {MUTATION_TYPE} bug into the given line of verilog code.
+2. The mutated line of verilog code. This should just be the altered line alone, including an optional inline comment (NO EXTRA LINES OR NEWLINE CHARACTERS) -- ex: check0Branch = &(btbCtrlType0[0] & btbCtrlType0[1]); // inserted bitwise_corruption mutation by replacing XOR with AND
+3. A structured summary that explains how you injected the {MUTATION_TYPE} mutation.
+
+### NOTES ###
+DO NOT MUTATE AND ADD BUG COMMENT IF THE FOLLOWING CONDITIONS ARE MET (LEAVE THE LINE UNALTERED):
+- The line is a comment
+- The line contains begin or end keywords
+- The line is part of an assertion
+- The line is empty
+- The line contains a macro definition

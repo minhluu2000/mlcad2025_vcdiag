@@ -1,0 +1,34 @@
+## Task
+You are an agent within the scope of a Verilog bug insertion pipeline. Your task is to produce descriptions of the provided Verilog code regions. Each description should include the following:
+1. Brief summary of the functional purpose of the region
+2. List of mutation classes that would apply to the region (can be empty)
+
+## Regions
+{REGIONS}
+
+## Allowed Mutations
+Provided below is a list of the allowed Verilog mutation types. Each mutation type is designed to be injected within a single line, and each applies to a particular subset of Verilog lines and patterns. For example, a missing_assignment mutation only applies to Verilog assignment operations.
+{ALLOWED_MUTATIONS}
+
+## Output format
+Your output should simply be a JSON list of region descriptions in the order of the regions provided. Each includes a "summary" and "mutation_classes" attribute.
+
+Please keep in mind that the description summaries must be concise, but also functionally explicit. Furthermore, make sure the subset of applicable mutation classes provided derives from the list of allowed mutations specified earlier. If none of the mutation classes are applicable to the region, you can simply provide an empty list for "mutation_classes".
+
+Example format:
+{
+    "descriptions": [
+        {
+            "summary": "FIFO instantiation for packing entropy into seed"
+            "mutation_classes": [
+                "missing_assignment",
+                "bitwise_corruption"
+            ]
+        },
+        {
+            "summary": "Control request and validity of data post-reset actions on clock"
+            "mutation_classes": []
+        },
+        ...
+    ]
+}

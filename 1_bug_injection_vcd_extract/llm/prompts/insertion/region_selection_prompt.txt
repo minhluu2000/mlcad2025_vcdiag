@@ -1,0 +1,101 @@
+### TASK ###
+
+Your job is to accept a list of region descriptions, each describing a region of code within a larger Verilog/SystemVerilog design specification, and choose, in order, the region you want based on region selection history, then all appropriate mutations that you think can be inserted in that region. You will be given a list of acceptable mutations to choose from. You must choose from this given list alone. You should make sure that the mutation type you have chosen is fitting for the region you have chosen, and that the region is large enough to provide enough breathing room for insertion.
+
+### INPUTS ###
+
+Verilog Region Descriptions:
+```
+{REGION_DESCRIPTIONS}
+```
+
+Acceptable Mutations:
+{ALLOWED_MUTATIONS}
+
+Region Selection History:
+```
+{REGION_SELECTION_HISTORY}
+```
+
+### EXPECTED OUTPUT ###
+You will OUTPUT the following:
+1. A brief (less than a paragraph) justification as to why you chose the region and mutation type(s) that you believe would be the most appropriate and fitting for the given region.
+2. The region index corresponding to your region selection
+3. The mutation type(s) you have selected -- must be from the set of acceptable mutations. There can be a single or multiple mutation types separated by commas
+
+### NOTES ###
+- Do not select regions with module declaration and input/output ports definition
+- Do not select a region that contains an instance of a module (i.e. Region 4 	 118-134 	 LFSR instance configuration for pseudo-random number generation.) or any kind of instantiation of another module
+- Do not select a region that contains assertions or properties
+- Try to select a region that is different from recent selections. Be consistent with your thinking for appropriate mutation types. 
+    - Look at the region_idx selection history to see the num_mutations_attempted value for each region.
+    - If a region has been selected multiple times, it may be worth considering other regions that have not been selected as frequently.
+    - Try to make sure all regions have similar num_mutations_attempted values or not too far apart.
+    - Steer away from very small regions (less than 15 lines of code) as they may not provide enough room for mutation insertion.
+
+For example (THIS IS A REFERENCE ONLY):
+Region selection history: 
+[
+    {
+        "region_idx": 0,
+        "description": "Module parameters and local parameters definition.",
+        "region_length": 14,
+        "num_mutations_attempted": 0,
+        "num_mutations_successful": 0
+    },
+    {
+        "region_idx": 1,
+        "description": "Input and output ports declaration for the module.",
+        "region_length": 45,
+        "num_mutations_attempted": 0,
+        "num_mutations_successful": 0
+    },
+    {
+        "region_idx": 2,
+        "description": "Input and output ports for transmission path.",
+        "region_length": 15,
+        "num_mutations_attempted": 0,
+        "num_mutations_successful": 0
+    },
+    {
+        "region_idx": 3,
+        "description": "IN transaction capture details and state transitions.",
+        "region_length": 39,
+        "num_mutations_attempted": 2,
+        "num_mutations_successful": 1
+    },
+    {
+        "region_idx": 4,
+        "description": "Handling of various transaction states and responses.",
+        "region_length": 69,
+        "num_mutations_attempted": 24,
+        "num_mutations_successful": 16
+    },
+    {
+        "region_idx": 5,
+        "description": "Behavior for timeout countdown on clock edge.",
+        "region_length": 11,
+        "num_mutations_attempted": 0,
+        "num_mutations_successful": 0
+    },
+    {
+        "region_idx": 6,
+        "description": "Handling transaction state transitions on clock edge.",
+        "region_length": 21,
+        "num_mutations_attempted": 1,
+        "num_mutations_successful": 0
+    },
+    {
+        "region_idx": 7,
+        "description": "Updating logic for endpoint configuration data.",
+        "region_length": 45,
+        "num_mutations_attempted": 1,
+        "num_mutations_successful": 0
+    }
+]
+
+- Notice that region_idx 6 has been selected 1 times, region_idx 4 has been selected 24 times, and region_idx 7 has been selected 1 time.
+
+- However, you should consider the ratio between num_mutations_attempted and num_mutations_successful. region_idx 4 has a high number of mutations attempted (24) but a relatively high number of successful mutations (16). This indicates that the region is likely to be more stable and less prone to errors, making it a good candidate for further mutation attempts.
+
+- Make decisions based on the region selection history, the region length, and the number of mutations attempted and successful.

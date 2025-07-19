@@ -1,0 +1,85 @@
+### Task ###
+
+Your job is to accept a verilog design specification written in systemverilog syntax, and split it into a sequential set of regions. The goal is to provide hardware verification engineers with a comprehensive set of regions which they can individually inject bugs into for testing. As a result, your approach must be consistent, canonical, reproducible, and organized. 
+
+Input:
+Your input will be a chunk of a system verilog file. Keep in mind that verilog files can be incredibly long so the input you receive will not be the entire file. However, at any given point, you shall only consider the input you are given.
+
+- Input Line Number Specification:
+Each line will start with a token that indicates line number (starting at 0) so that you can accurately delineate your splits. Since your input is simply a chunk of the full verilog design file, you will be given a few extra lines at the end of the chunk that indicate how the next chunk starts. These extra lines will be marked as such and should not be included in your splits. However, you should use these to determine if the final region in the chunk is being split between the current chunk and the next. The syntax for this line number specification is as follows:
+```
+[0:] CURRENT CHUNK LINE
+[1:] CURRENT CHUNK LINE
+...
+[1534:] CURRENT CHUNK LINE
+[1535:] CURRENT CHUNK LINE
+[1536:] CURRENT CHUNK LINE
+[1537 (extra):] NEXT CHUNK LINE
+[1538 (extra):] NEXT CHUNK LINE
+[1539 (extra):] NEXT CHUNK LINE
+```
+
+- End of File Specification:
+Furthermore, the end of the verilog file will be specified with the following token:
+{END OF FILE}
+If you see this at the end of the given chunk, it means the given chunk is the final chunk and there is nothing remaining in the full verilog design file after this chunk. In this case, trivially, you will not be provided with auxillary lines from the next chunk as there are no more. 
+
+Output:
+Your output will include a set of region specifications. Each region specification will include a starting line (inclusive), an ending line (inclusive), and a brief (less than 30 words) summary of what the purpose of the region is. Please note that these regions cumulatively must capture the entire specification of the verilog design file. 
+
+- What makes a region?
+A region should be a subsection of the code that conceptually has a clearly defined purpose in the context of the overall module. Sometimes, regions can be indicated by source code comments that define what the following code does. However, you can also define these regions as you see fit, isolating sections of code that have a distinct purpose or function. A region must include source code. If a region consists solely of comments, it does not need to be included. Regions should not overlap with one another, and all the regions put together should encompass all the source code in the entire verilog file.
+
+- Output Chunking Rules:
+Keep in mind that you may only be provided a chunk of the verilog file. Thus, if a region is cut off at the end of a chunk, you must not include the region in your specifications as this would result in it being split in two. To correct for this, the last few lines of your input, as specified by the input format, will be auxillary lines from the next chunk which. You will analyze these lines in the context of the last lines of the current chunk to determine whether or not the final region of the chunk is being split. If you see that the last region is being split across the given chunk and the next chunk, do NOT include the final region specification in your output (it will be captured in the next query). Otherwise, if the last region is not being split or you have reached the end of the file, proceed as normal, appending the final region specification to the output.
+
+- Output Format: 
+Your output will be provided in the following JSON format. This will include all of the region specifications in the provided chunk of the verilog file as a JSON array. 
+
+Output format:
+```json
+[
+    {
+        "region_description": string (30 words or less),
+        "start_line": int (inclusive),
+        "end_line": int (inclusive)
+    },
+    ...
+]
+```
+
+### INPUT ###
+
+Verilog Chunk:
+```
+{VERILOG_CHUNK}
+```
+
+- Notes:
++ Explicitly define a region for each module instantiation, for example:
+```verilog
+prim_packer_fifo #(
+    .InW         ( EntropyWidth ),
+    .OutW        ( Width        ),
+    .ClearOnRead ( 1'b0         )
+) u_prim_packer_fifo (
+    .clk_i    ( clk_i         ),
+    .rst_ni   ( rst_ni        ),
+    .clr_i    ( 1'b0          ), // Not needed.
+    .wvalid_i ( entropy_ack_i ),
+    .wdata_i  ( entropy_i     ),
+    .wready_o (               ), // Not needed, we're always ready to sink data at this point.
+    .rvalid_o ( seed_valid    ),
+    .rdata_o  ( seed          ),
+    .rready_i ( 1'b1          ), // We're always ready to receive the packed output word.
+    .depth_o  (               )  // Not needed.
+);
+```
+is a region defined as follows:
+```json
+{
+    "region_description": "FIFO instantiation for packing entropy into seed.",
+    "start_line": 0,
+    "end_line": 11
+}
+```

@@ -1,0 +1,1 @@
+python -m vcd_extract.llm.main --model=gpt --size=gpt-4o-mini --design_path=vcd_extract/llm/designs/aes_cipher_control.sv --out_dir=vcd_extract/llm/out --cache_dir=vcd_extract/llm/cache --prompt_dir=vcd_extract/llm/prompts --num_bugs=10 --debug

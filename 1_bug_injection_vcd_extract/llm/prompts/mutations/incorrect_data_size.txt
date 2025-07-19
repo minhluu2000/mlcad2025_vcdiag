@@ -1,0 +1,43 @@
+An array might be created larger or smaller than it should be. In SystemVerilog, arrays can be classified into two categories: packed and unpacked arrays.
+
+A packed array is a contiguous collection of elements where all elements are stored together in a single block of memory. This is typically used for representing bit-fields or vectors where the elements are tightly packed, such as a bus of signals or a bit vector. Packed arrays are defined with a size range in the array declaration.
+
+Example: logic [7:0] byte_data;  // 1D packed array of 8 bits
+
+An unpacked array, on the other hand, allows elements to be stored in separate memory locations and does not require the elements to be contiguous. Unpacked arrays are used when each element is independent or has variable sizes, like in the case of multidimensional arrays or dynamic arrays. They can be declared with an optional size in the array dimension.
+
+Example: int unsigned arr [10];  // Unpacked array with 10 elements
+
+
+Rules
+- Find an array assignment or declaration in the code.
+- The usual rule is assignment starts from largest index to smallest one. For example: arr[7:0] = 8'hFF; // Starting bit 7th to 0th will be assigned with 8'hFF.
+- Alter the size of the array. This could be either replacing an expression with another expression (e.g. [START_INDEX:END_INDEX] with [START_INDEX + 1:END_INDEX + 1]) or changing to a constant size (e.g. [START_INDEX:END_INDEX] with [3:0]).
+- For expression, DO NOT introduce new variables. Instead, use existing variables already in the code and use arithmetic operators (+, -, *, /) to manipulate the size.
+
+
+Examples
+EXAMPLE 1 
+---- Original ----
+a[7:0] = 8'hFF;
+---- Buggy ----
+a[6:0] = 8'hFF;
+---- Do Not ----
+reg [`SIZE_RMT_LOG+3+`CHECKPOINTS+`CHECKPOINTS_LOG+4*`SIZE_PHYSICAL_LOG+4+`SIZE_IMMEDIATE+1+
+`LDST_TYPES_LOG+`INST_TYPES_LOG+`SIZE_OPCODE_I+2*`SIZE_PC+`SIZE_CTI_LOG+`SIZE_NULL:0] 
+                                     dispatchPacket0;
+---- Explanation ----
+- The original code declares an array dispatchPacket0 with a size of `SIZE_RMT_LOG+3+`CHECKPOINTS+`CHECKPOINTS_LOG+4*`SIZE_PHYSICAL_LOG+4+`SIZE_IMMEDIATE+1+`LDST_TYPES_LOG+`INST_TYPES_LOG+`SIZE_OPCODE_I+2*`SIZE_PC+`SIZE_CTI_LOG:0.
+- The bug is injected by changing the size of the array to `SIZE_RMT_LOG*`SIZE_PHYSICAL_LOG+4+`SIZE_IMMEDIATE+1:0.
+- This will cause the size of the array to be different from the original size.
+- Do not introduce new variables like `SIZE_NULL in the array declaration. Only use existing variables and arithmetic operators to manipulate the size.
+END_EXAMPLE
+
+Do
+- Do try to vary the size of the array by changing the expression or using a constant. So the original could be 7:0 and the buggy could be 6:0 or 5:0 or 7-1:0. or 7-4:0.
+- Do try to use arithmetic operators to manipulate the size of the array.
+- Do ensure everything conforms to IEEE-1800-2017 Language Reference Manual.
+
+Do not
+- Do not introduce new variables in the array declaration. Only use existing variables and arithmetic operators to manipulate the size.
+- Do not touch assertion statements (look out for `ASSERT or `ASSUME). If you see one, leave it as is.

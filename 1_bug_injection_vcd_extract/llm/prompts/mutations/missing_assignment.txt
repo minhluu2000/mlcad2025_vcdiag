@@ -1,0 +1,36 @@
+Description: The missing assignment bug is injected by simply commenting out an assignment operation.
+
+
+Example
+---- Original ----
+assign in_ready_o           = sp2v_e'(sp_in_ready);
+assign out_valid_o          = sp2v_e'(sp_out_valid);
+assign state_we_o           = sp2v_e'(sp_state_we);
+assign sub_bytes_en_o       = sp2v_e'(sp_sub_bytes_en);
+assign sub_bytes_out_ack_o  = sp2v_e'(sp_sub_bytes_out_ack);
+---- Buggy ----
+assign in_ready_o           = sp2v_e'(~sp_in_ready); 
+assign out_valid_o          = sp2v_e'(~sp_out_valid);
+// assign state_we_o           = sp2v_e'(~sp_state_we);
+assign sub_bytes_en_o       = sp2v_e'(sp_sub_bytes_en);
+assign sub_bytes_out_ack_o  = sp2v_e'(sp_sub_bytes_out_ack);
+
+Explanation: Assignment is commented out. This bug is fairly simple.
+
+Do
+- Do ensure everything conforms to IEEE-1800-2017 Language Reference Manual.
+- Do comment out the assignment operation. This is the key to this bug.
+
+Do not
+- Do not comment out declarations (i.e. // logic [7:0] a;).
+- Do not touch assertion statements (look out for `ASSERT or `ASSUME). If you see one, leave it as is.
+
+
+Past mistakes
+-   logic       [3:0] rnd_ctr_d, rnd_ctr_q;
++ // logic       [3:0] rnd_ctr_d, rnd_ctr_q; // BUG_10: Inserted missing_assignment bug
+-> Do not just delete the declaration. If you see a declaration, leave it as is.
+
+-   output logic             prng_update_o,
++ // output logic             prng_update_o, // BUG_11: Inserted missing_assignment bug
+-> Do not just delete the declaration. If you see a declaration, leave it as is. This includes output, input, and inout declarations.

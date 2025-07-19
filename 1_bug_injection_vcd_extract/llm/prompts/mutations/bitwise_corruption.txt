@@ -1,0 +1,122 @@
+Description: The bitwise corruption bug is injected by changing the right-hand side of the assignment to a different logical operation. This could be multiple operations, a logical negation, or a different logical operation. This will cause the output to be incorrect as the value of the output will be different from the original value.
+
+Rules
+- Find the assignment statements in the code.
+- Change the right-hand side of the assignment to a different logical operation.
+- Multiple operations, a logical negation, or a different logical operation can be used.
+- Multiple lines of code can be changed, but at least one line must be changed.
+- The final output must be logically different from the original output. This means no double negation or equivalent logical operations.
+- Allowed operators: &, |, ^, ~
+- Do not create new variables or change the left-hand side of the assignment.
+- The bug must be syntactically and semantically correct according to Verilog/SystemVerilog syntax.
+
+Examples
+
+EXAMPLE 1 
+---- Original ----
+assign in_ready_o           = sp2v_e'(sp_in_ready);
+assign out_valid_o          = sp2v_e'(sp_out_valid);
+assign state_we_o           = sp2v_e'(sp_state_we);
+assign sub_bytes_en_o       = sp2v_e'(sp_sub_bytes_en);
+assign sub_bytes_out_ack_o  = sp2v_e'(sp_sub_bytes_out_ack);
+---- Buggy ----
+assign in_ready_o           = sp2v_e'(~sp_in_ready); 
+assign out_valid_o          = sp2v_e'(~sp_out_valid);
+assign state_we_o           = sp2v_e'(~sp_state_we);
+assign sub_bytes_en_o       = sp2v_e'(sp_sub_bytes_en);
+assign sub_bytes_out_ack_o  = sp2v_e'(sp_sub_bytes_out_ack);
+---- Do Not ----
+assign in_ready_o           = sp2v_e'(sp_in_ready); 
+assign in_ready_o           = sp2v_e'(sp_out_valid);
+assign state_we_o           = sp2v_e'(sp_state_we);
+assign sub_bytes_en_o       = sp2v_e'(sp_sub_bytes_en);
+assign sub_bytes_out_ack_o  = sp2v_e'(sp_sub_bytes_out_ack);
+---- Explanation ----
+- The original code assigns the value of sp_in_ready, sp_out_valid, and sp_state_we to in_ready_o, out_valid_o, and state_we_o respectively. 
+- The bug is injected by changing the right-hand side of the assignment to the logical negation of the original value. 
+- This will cause the output to be incorrect as the value of in_ready_o, out_valid_o, and state_we_o will be the logical negation of the original value of sp_in_ready, sp_out_valid, and sp_state_we respectively. 
+- The other assignments are left unchanged.
+- Do not assign two different variables to the same output. This is not allowed by Verilog/SystemVerilog
+END_EXAMPLE
+
+EXAMPLE 2
+---- Original ----
+check0Branch = ~(btbCtrlType0[0] & btbCtrlType0[1]);
+check1Branch = ~(btbCtrlType1[0] & btbCtrlType1[1]);
+---- Buggy ----
+check0Branch = &(btbCtrlType0[0] & btbCtrlType0[1]);
+check1Branch = &(btbCtrlType1[0] & btbCtrlType1[1]);
+---- Do Not ----
+check0Branch <= &(btbCtrlType0[0] < btbCtrlType0[1]);
+check1Branch <= &(btbCtrlType1[0] & btbCtrlType1[1]);
+---- Explanation ----
+- The original code assigns the logical negation of the AND operation between btbCtrlType0[0] and btbCtrlType0[1].
+- The bug is injected by changing the right-hand side of the assignment from ~ to &.
+- This will cause the output to be incorrect as the value of check0Branch and check1Branch will be the AND operation between btbCtrlType0[0] and btbCtrlType0[1] respectively.
+- Do not switch from blocking assignment (=) to non-blocking assignment (<=) or vice versa. Additionally, do not use the less than operator (<) in the assignment, only use allowed logical operators.
+END_EXAMPLE
+
+EXAMPLE 3 
+---- Original ----
+btbhit2 = btbHit2 & (prediction2 | check2Branch);
+btbhit3 = btbHit3 & (prediction3 | check3Branch);
+---- Buggy ----
+btbhit2 = btbHit2 ^ (prediction2 & check2Branch);
+btbhit3 = btbHit3 ^ (prediction3 & check3Branch);
+---- Do Not ----
+btbhit2 = btbHit2 & prediction2 & check2Branch);
+btbhit3 = btbHit3 & (prediction3;
+---- Explanation ----
+- The original code assigns the AND operation between btbHit2 and the OR operation between prediction2 and check2Branch to btbhit2.
+- The bug is injected by changing the right-hand side of the assignment to the XOR operation between btbHit2 and the AND operation between prediction2 and check2Branch.
+- This will cause the output to be incorrect as the value of btbhit2 will be the XOR operation between btbHit2 and the AND operation between prediction2 and check2Branch.
+- Do not miss the parentheses in the new expression.
+END_EXAMPLE 
+
+EXAMPLE 4 
+---- Original ----
+assign fs1Ready_o = miss;
+assign miss_o     = ~miss;
+---- Buggy ----
+assign fs1Ready_o = ~miss;
+assign miss_o     = miss;
+---- Do Not ----
+assign fs1Ready_o = miss | miss1 | miss2;
+assign miss_o     = ~miss;
+---- Explanation ----
+- The original code assigns the logical negation of miss to miss_o.
+- The bug is injected by adding the logical negation operator to miss_o and removing it from fs1Ready_o. This is a simple swap of the logical operators.
+- This will cause the output to be incorrect as the value of fs1Ready_o and miss_o will be the logical negation of miss and miss_o respectively.
+- Do not add new variables to the assignment or change the left-hand side of the assignment WITHOUT additional context.
+END_EXAMPLE
+
+
+
+Do
+- Do ensure everything conforms to IEEE-1800-2017 Language Reference Manual.
+- Do try to change the right-hand side of the assignment. This could be changing a logical operator (e.g. & to |) or a combination of logical operators (e.g. ~(a & b) to (a | b)).
+- For logical assignments, do try to change the logical operator to introduce the bug. Allowed operators: &, |, ^, ~
+
+
+Do not
+- Do not change a declaration statement (i.e logic cyc_ctr_expr;) to an an assignment statement (i.e. logic cyc_ctr_expr = 1'b0;). Only modify assignments. If you see a declaration, skip it.
+- Do not touch assertion statements (look out for `ASSERT or `ASSUME). If you see one, leave it as is.
+
+
+Past mistakes
+-   logic             cyc_ctr_expr;
++ logic cyc_ctr_expr = 1'b1; // BUG_1: Inserted bitwise_corruption bug
+-> There is no assignment in the original code. Make sure to only modify existing assignments.
+
+-   logic             cyc_ctr_expr;
++ cyc_ctr_expr = ~1'b1; // BUG_7: Inserted bitwise_corruption bug
+-> There is no assignment in the original code. Make sure to only modify existing assignments.
+
+
+-   logic       [3:0] rnd_ctr_d, rnd_ctr_q;
++ // Logic signals declared, no mutation possible due to the lack of assignments // BUG_15: Inserted bitwise_corruption bug
+-> Do not just delete the declaration. Skip it.
+
+-   logic             cyc_ctr_expr;
++ logic cyc_ctr_expr = ~some_value; // BUG_13: Inserted bitwise_corruption bug
+-> You cannot switch a declaration to an assignment. Only modify existing assignments. If you see a declaration, leave it as is.

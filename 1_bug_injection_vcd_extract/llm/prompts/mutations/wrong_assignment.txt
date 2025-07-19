@@ -1,0 +1,129 @@
+Description: A bug where the left hand side of an assignment is changed, causing the assignment to be applied to a different variable. DO NOT introduce new variables, only use existing ones. Only the left hand side of the assignment should be changed. Do not modify the right hand side.
+
+The following examples illustrate how these mutations work logically. Keep in mind these examples are not syntax specific.
+
+Rules
+- Find an assignment in the code. This can be a line with assign keyword or a line with an assignment operator (e.g. =, <=, etc.).
+- The usual rule is the left side of the assignment is assigned to the right side of the assignment. For example: key_words_sel_o = KEY_WORDS_ZERO; // The left side key_words_sel_o is assigned to the right side KEY_WORDS_ZERO.
+- Alter the right side of the assignment. This could be changing a constant (e.g. KEY_WORDS_ZERO to KEY_WORDS_0123) or a variable (e.g. cyc_ctr_d to cyc_ctr_q). Make sure to consider the context of the assignment when making changes.
+- Only alter the left side of the assignment if and only if the left side is assigned to a constant. For example: key_words_sel_o = KEY_WORDS_ZERO; // The left side key_words_sel_o is assigned to the constant KEY_WORDS_ZERO. You can change the constant to introduce the bug.
+
+Examples
+EXAMPLE 1 
+---- Original ----
+key_words_sel_o = KEY_WORDS_ZERO;
+---- Buggy ----
+key_words_sel_o = KEY_WORDS_0123;
+---- Do Not ----
+key_words_sel_i = KEY_WORDS_ZERO; // BUG_5: Inserted wrong_assignment bug
+---- Explanation ----
+- The left side of the assignment is assigned to constant KEY_WORDS_ZERO, and the buggy version is assigned to constant KEY_WORDS_0123. You can change the constant to introduce the bug.
+- Do not introduce any new variables that are not in the code, like key_words_sel_i.
+
+EXAMPLE 2
+---- Original ----
+logic       [2:0] cyc_ctr_d, cyc_ctr_q;
+---- Buggy ----
+logic       [2:0] cyc_ctr_d, cyc_ctr_q; // BUG_2: Inserted wrong_assignment bug
+---- Do Not ----
+logic       [2:0] cyc_ctr_q, cyc_ctr_q; // BUG_2: Inserted wrong_assignment bug
+---- Explanation ----
+- If you see a declaration, skip it.
+- The original code declares two variables cyc_ctr_d and cyc_ctr_q, and the buggy version declares two variables cyc_ctr_q and cyc_ctr_q. You can change the variable names to introduce the bug.
+- DO NOT duplicate variables, that will not compile.
+
+
+Example 3
+---- Original ----
+out_valid_o = prng_reseed_done_q;
+---- Buggy ----
+out_valid_o = prng_reseed_done_q;
+---- Do Not ----
+some_other_var = prng_reseed_done_q; // BUG_5: Inserted wrong_assignment bug
+---- Explanation ----
+
+
+Do
+- Do ensure everything conforms to IEEE-1800-2017 Language Reference Manual.
+- Do try to change the right hand side of the assignment. This could be changing a constant (e.g. KEY_WORDS_ZERO to KEY_WORDS_0123) or a variable (e.g. cyc_ctr_d to cyc_ctr_q). Make sure to consider the context of the assignment when making changes.
+- Do only try to change the left hand side of the assignment if and only if that variable was not assign anywhere else. This only applies to the assign keyword statement. For example: assign key_words_sel_o = KEY_WORDS_ZERO; // The left side key_words_sel_o is assigned to the constant KEY_WORDS_ZERO. You can change the constant to introduce the bug assuming assign key_words_sel_o is not assigned anywhere else.
+- Do try to swap the logic around for ternary operators. For example: (condition) ? var1 : var2 can be changed to (condition) ? var2 : var1.
+
+
+Do not
+- Do not introduce new assignments, only modify existing ones. 
+- Do not introduce new variables that are not in the code, like key_words_sel_i.
+- Do not introduce new constants that are not in the code, like KEY_WORDS_ABC.
+- Do not add a new assignment statement without additional context. If you see an empty string, keep it the way it is.
+- Do not alter declarations, only modify assignments. If you see a declaration, skip it. Example of declaration: logic       [2:0] cyc_ctr_d, cyc_ctr_q;
+- Do not modify the left hand side of an assign statement because it could lead to "multiple drivers" error. For example: assign unused_prng_reseed = prng_reseed_i; // BUG_6: Inserted wrong_assignment bug
+- Do not modify the right hand side of an assign statement such that it is assigned to itself. This could lead to "multiple drivers" error. For example: assign in_ep_current_d = ep_in_hw ? rx_endp_i : '0; // BUG_8: Inserted wrong_assignment bug
+- Do not touch assertion statements (look out for `ASSERT or `ASSUME). If you see one, leave it as is.
+
+
+Past mistakes (use these as references, do not just remember them, use them as examples for broader context)
+-         aes_cipher_ctrl_ns = CIPHER_CTRL_ERROR;
++ aes_cipher_ctrl_ns = CIPHER_CTRL_SUCCESS; // BUG_3: Inserted wrong_assignment bug 
+-> There is no CIPHER_CTRL_SUCCESS in the code. Make sure to not make up new variables that are not in the code.
+
+-             crypt_d_o       = ~dec_key_gen_i & crypt_i;
++ crypt_d_o = ~other_var & crypt_i; // BUG_4: Inserted wrong_assignment bug
+-> other_var is not in the code. Make sure to only use existing variables in the code. Do not introduce new ones.
+
+-         round_key_sel_o = (op_i == CIPH_FWD) ? ROUND_KEY_DIRECT :
++ round_key_sel_o = (op_i == SOME_OTHER_CONST) ? ROUND_KEY_DIRECT : // BUG_13: Inserted wrong_assignment bug
+-> SOME_OTHER_CONST is not in the code. Make sure to only use existing constants in the code. Do not introduce new ones.
+
+-             (key_len_i == AES_128)                     ? KEY_WORDS_0123 :
++ (key_len_i == AES_128) ? KEY_WORDS_ABC : // BUG_1: Inserted wrong_assignment bug
+-> KEY_WORDS_ABC is not in the code. Make sure to only use existing constants in the code. Do not introduce new ones.
+
+-     cyc_ctr_d            = (SecSBoxImpl == SBoxImplDom) ? cyc_ctr_q + 3'd1 : 3'd0;
++     cyc_ctr_d            = (SecSBoxImpl == SBoxImplDom) ? cyc_ctr_d + 3'd1 : 3'd0; // BUG_11: Inserted wrong_assignment bug
+-> Net type cannot be used on the left side of this assignment. For statements similar to this, you can also switch 3'd1 to 3'd2 or 3'd0 to 3'd1. Or swap the condition of the ternary operator. Make sure changes are conforming to IEEE-1800-2017 Language Reference Manual. This applies to similar statements as well.
+
+-           key_full_sel_o = KEY_FULL_CLEAR;
++ key_full_sel_o = KEY_FULL_SET; // BUG_5: Inserted wrong_assignment bug
+-> There is no KEY_FULL_SET in the code. Make sure to not make up new constant that are not in the code.
+
+- 
++ output_signal = input_signal_a; // BUG_13: Inserted wrong_assignment bug
+-> Do not introduce a new assignment into an empty line. If you see an empty line, leave it as is.
+
+-     assign unused_prng_reseed = prng_reseed_i;
++     assign unused_prng_reseed = prng_reseed_done_q; // BUG_6: Inserted wrong_assignment bug
+-> There is no prng_reseed_done_q in the code. Make sure to not make up new variables that are not in the code. Do not make up new variables that are not in the code.
+
+-   assign tx_data_avail_o = logic'(in_xact_state == StSendData) & more_data_to_send;
++   assign more_data_to_send = logic'(in_xact_state == StSendData) & more_data_to_send; // BUG_16: Inserted wrong_assignment bug
+-> Variable "more_data_to_send" is driven by multiple structural drivers. DO NOT REASSIGN IT, only use it in the right hand side of the assignment. Make sure to not reassign it. This applies to similar statements as well.
+
+-     tx_pid_o = 4'b0000;
++ in_xact_state_next = 4'b0000; // BUG_9: Inserted wrong_assignment bug
+-> in_xact_state_next is not in the code. DO NOT MAKE UP NEW VARIABLES THAT ARE NOT IN THE CODE. Make sure to not make up new variables that are not in the code. This applies to similar statements as well.
+
+-  assign in_ep_current_d = ep_in_hw ? rx_endp_i : '0;
++  assign ep_in_hw = ep_in_hw ? rx_endp_i : '0; // BUG_8: Inserted wrong_assignment bug
+-> DO NOT TAKE A VARIABLE AND ASSIGN IT TO ITSELF UNLESS THE EXISTING CODE DOES IT. Instead, you can flip the condition of the ternary operator. For example: (condition) ? var1 : var2 can be changed to (condition) ? var2 : var1. Make sure to not take a variable and assign it to itself unless the existing code does it. This applies to similar statements as well. This is because assign statements cannot be driven twice.
+
+
+-   assign in_ep_current_d = ep_in_hw ? rx_endp_i : '0;
++   assign in_ep_index = ep_in_hw ? rx_endp_i : '0; // BUG_9: Inserted wrong_assignment bug
+-> Error-[IPDW] Identifier previously declared
+                ../src/lowrisc_ip_usb_fs_nb_pe_0.1/rtl/usb_fs_nb_in_pe.sv, 166
+                  Second declaration for identifier 'in_ep_index' ignored
+                  Identifier 'in_ep_index' previously declared as wire.
+                  [../src/lowrisc_ip_usb_fs_nb_pe_0.1/rtl/usb_fs_nb_in_pe.sv, 161]
+-> in_ep_index already exists as a wire. Make sure to not declare a variable that already exists in the code. This applies to similar statements as well. You can change the right hand side of the assignment to introduce the bug, but not the left hand side.
+
+-   assign in_ep_index   = in_ep_current_o[0 +: InEpW];
++   assign in_ep_index_d = in_ep_current_o[0 +: InEpW]; // BUG_2: Inserted wrong_assignment bug
+-> in_ep_index_d is already assigned as a wire. Make sure to not declare a variable that already exists in the code. This applies to similar statements as well. You can change the right hand side of the assignment to introduce the bug, but not the left hand side.
+
+-   logic has_data_q;
++   logic in_ep_index; // BUG_8: Inserted wrong_assignment bug
+-> has_data_q is a declaration, so do not just replace a declaration (usually a variable with a type and a name) with another variable. This applies to similar statements as well. You can change the right hand side of the assignment to introduce the bug, but not the left hand side (there is no left or right hand side in a declaration, so just leave it as is).
+
+-   assign tx_data_avail_o = logic'(in_xact_state == StSendData) & more_data_to_send;
++ assign more_data_to_send = logic'(in_xact_state == StSendData) & more_data_to_send; // BUG_8: Inserted wrong_assignment bug
+-> AGAIN, this is an assignment statement. Do not just replace a variable with another variable. This applies to similar statements as well. You can change the right hand side of the assignment to introduce the bug, but not the left hand side (there is no left or right hand side in a declaration, so just leave it as is). Make sure to not just replace a variable with another variable. This applies to similar statements as well.

@@ -1,0 +1,35 @@
+- name: missing_assignment
+  isolated: true
+  description: >
+    When an assignment to a variable that should be there is missing. This can be
+    achieved by commenting out an existing assignment statement. For example: 
+    assign a = b; can be changed to // assign a = b; You should not introduce 
+    new variables, but commenting out existing ones.
+
+- name: bitwise_corruption
+  isolated: true
+  description: >
+    A type of bug that performs bitwise manipulation that causes the output to 
+    be incorrect. This can be achieved by changing the right-hand side of an 
+    assignment to a different logical operation. For example: a = b & c -> 
+    a = b | c; a = b -> a = ~b; a = b ^ c -> a = ~(b ^ c);
+
+- name: logic_bug
+  isolated: false
+  description: >
+    A bug in the condition of an if, while, for, or always (always_ff, always_comb) that results in erroneous behavior.
+    ONLY aplicable for conditional statements and always blocks.
+    
+- name: wrong_assignment
+  isolated: false
+  description: >
+    A bug where the left hand side of an assignment is changed, causing the 
+    assignment to be applied to a different variable. For example:
+    a = b; -> c = b; Do not introduce new variables, only use existing ones.
+
+- name: incorrect_data_size
+  isolated: false
+  description: >
+    A bug in which the array size is changed, leading to mismatch in the data.
+    This mutation is specific to Verilog lines that include packed or unpacked arrays.
+    This refers to lines like `logic [7:0] byte_data;` or `int unsigned arr [10];`

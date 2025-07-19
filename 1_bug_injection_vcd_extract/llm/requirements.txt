@@ -1,0 +1,6 @@
+openai
+transformers 
+torch 
+argparse
+tqdm
+termcolor

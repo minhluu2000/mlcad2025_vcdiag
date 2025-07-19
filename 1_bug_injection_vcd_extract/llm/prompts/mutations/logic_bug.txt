@@ -1,0 +1,138 @@
+Description: A bug in the condition of an if, while, for, or always (always_ff, always_comb) that results in erroneous behavior. 
+ONLY aplicable for conditional statements and always blocks, do not apply to other types of statements like assignments or declarations or variable usage.
+
+Rules
+- Find the conditional statements in the code (if, while, for, always (always_ff, always_comb) statements).
+- Change any part of the condition, but only the condition (do not modify other parts of the code).
+- Multiple operations, a logical negation, or a different logical operation can be used.
+- The final output must be logically different from the original output. This means no double negation or equivalent logical operations.
+- If modifying a while loop, the while loop condition must not result in an infinite loop (i.e. always evaluate to true)
+- Allowed operators: &, |, ^, ~. Additionally, the comparison operator may be changed (==, <, <=, >, >=) or logical operators (&&, ||).
+- For always blocks, the sensitivity list can be modified to change the behavior or sensitivity of the block (e.g. posedge to negedge).
+- The bug must be syntactically and semantically correct according to Verilog/SystemVerilog syntax.
+
+
+Examples (NOTE: Variables and values are placeholders and may not make sense in the context of the code, use them as mere examples and take care of the context while creating mutations)
+
+EXAMPLE 1 
+---- Original ----
+if (incr_err_i || mr_err_i) begin
+---- Buggy ----
+if (incr_err_i) begin
+---- Do Not ----
+if (mr_err) begin
+---- Explanation ----
+- The original code checks if incr_err_i or mr_err_i is true.
+- The bug is injected by removing the check for mr_err_i, which will result in different behavior.
+- Do not remove the begin keyword from the conditional statement.
+- Do not introduce new variables in the conditional statement, in this case, mr_err does not exist.
+END_EXAMPLE
+
+EXAMPLE 2
+---- Original ----
+if (incr_i == 1'b1) begin
+    // Initialize slice index and carry bit.
+    ctr_slice_idx_d = '0;
+    ctr_carry_d     = 1'b1;
+    aes_ctr_ns      = CTR_INCR;
+end
+---- Buggy ----
+if (incr_i != 1'b1) begin // BUG_1: Inserted logic_bug bug
+    // Initialize slice index and carry bit.
+    ctr_slice_idx_d = '0;
+    ctr_carry_d     = 1'b1;
+    aes_ctr_ns      = CTR_INCR;
+end
+---- Do Not ----
+if (incr_i == 1'b1) begin
+    // Initialize slice index and carry bit.
+    if (slice_index > 0) begin // BUG_1: Inserted logic_bug bug
+    ctr_slice_idx_d = '0;
+    ctr_carry_d     = 1'b1;
+    aes_ctr_ns      = CTR_INCR;
+end
+---- Explanation ----
+- The original code checks if incr_i is equal to 1.
+- The bug is injected by changing the comparison to not equal, which will result in different behavior.
+- Do not introduce new variables and/or additional conditional statements like the inserted BUG_1.
+- If the selected string is empty, leave it empty.
+
+EXAMPLE 3
+---- Original ----
+always_ff @(posedge clk_i or negedge rst_ni) begin
+    if (!rst_ni) begin
+        ctr_slice_idx_q <= '0;
+        ctr_carry_q     <= '0;
+    end else begin
+        ctr_slice_idx_q <= ctr_slice_idx_d;
+        ctr_carry_q     <= ctr_carry_d;
+    end
+end
+---- Buggy ----
+always_ff @(posedge clk_i or posedge rst_ni) begin // BUG_1: Inserted logic_bug bug
+    if (!rst_ni) begin
+        ctr_slice_idx_q <= '0;
+        ctr_carry_q     <= '0;
+    end else begin
+        ctr_slice_idx_q <= ctr_slice_idx_d;
+        ctr_carry_q     <= ctr_carry_d;
+    end
+end
+---- Do Not ----
+always_ff @(posedge clk_i or negedge rst_n) begin // BUG_1: Inserted logic_bug bug
+    if (!rst_ni) begin 
+        ctr_slice_idx_q <= '0;
+        ctr_carry_q     <= '1; // BUG_2: Inserted logic_bug bug
+    // BUG_3: Removed the else block
+        ctr_slice_idx_q <= ctr_slice_idx_d;
+        ctr_carry_q     <= ctr_carry_d;
+    end
+end
+---- Explanation ----
+- The original code is an always_ff block sensitive to the posedge of clk_i or negedge of rst_ni.
+- The bug is injected by changing the sensitivity list to posedge rst_ni, which will result in different behavior.
+- Do not introduce new variables and/or additional conditional statements like rst_n like the inserted BUG_1.
+- Do not alter non-conditional statements like the inserted BUG_2.
+- Do not remove the else block like the inserted BUG_3.
+
+EXAMPLE 3
+---- Original ----
+end else if (dec_key_gen_i || crypt_i) begin
+---- Buggy ----
+end else if (dec_key_gen_i ^ crypt_i) begin
+---- Do Not ----
+dec_key_gen_i = (dec_key_gen_i || crypt_i); // BUG_2: Inserted wrong_assignment bug
+---- Explanation ----
+- The right side of the assignment is changed from (dec_key_gen_i || crypt_i) to (dec_key_gen_i ^ crypt_i). You can change the logical operator to introduce the bug.
+- DO NOT MODIFY THE LOGICAL STATEMENT INTO AN ASSIGNMENT STATEMENT.
+- DO NOT CHANGE THE MEANING OF THE LINE.
+
+Do 
+- Do try to change the condition of the if, while, for, or always (always_ff, always_comb) statement. This could be changing a logical operator (e.g. || to &&) or a comparison operator (e.g. == to !=).
+- Do try to change the sensitivity list of the always block (e.g. posedge to negedge).
+- Do try to change the condition of the while loop (e.g. always evaluate to true).
+- Do ensure everything conforms to IEEE-1800-2017 Language Reference Manual.
+
+Do not
+- Do not create new variables. Only use existing ones.
+- Do not alter any non-conditional or non-always statements like assignments, declarations, or variable usage. If the selected string is something other than a conditional statement or always block, keep it the same.
+- Do not remove the begin or end or else or else if or if or any reserved keywords under IEEE-1800-2017 Language Reference Manual.
+- Do not remove any conditional statements or assignments.
+- Do not create new variables. Do not create a brand new conditional statement, use the existing one. This means a selected string is empty, keep it the way it is.
+- Do not alter any non-conditional or non-always statements like assignments, declarations, or variable usage. If the selected string is something other than a conditional statement or always block, keep it the same.
+- Do not remove the begin keyword from the conditional statement.
+- Do not remove any conditional statements or assignments.
+- Do not change variable types (i.e. from reg to logic, wire to reg, etc.).
+- Do not touch assertion statements (look out for `ASSERT or `ASSUME). If you see one, leave it as is.
+
+
+Past mistakes
+-   logic             advance;
++ logic             !advance; // BUG_4: Inserted logic_bug bug
+-> Error: Identifier not declared. 
+-> There is no assignment in the original code, so do not just add a negation operator. Make sure to only modify existing assignments. If you see a declaration, leave it as is.
+
+-           in_xact_state_next = StWaitAck;
++ if (!rx_pkt_start_i) begin // BUG_5: Inserted logic_bug bug
+-> DO NOT CHANGE AN ASSIGNMENT STATEMENT INTO A CONDITIONAL STATEMENT. Instead, do in_xact_state_next = ~StWaitAck; // BUG_5: Inserted logic_bug bug or like use other operators like ^, |, &.
+

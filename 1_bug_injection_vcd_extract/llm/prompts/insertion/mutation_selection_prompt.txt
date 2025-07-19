@@ -1,0 +1,47 @@
+## TASK
+
+Your job is to accept Verilog/SystemVerilog design specifications written in Verilog/SystemVerilog syntax, select a mutation (bug) to inject into the design, and describe how you plan on injecting said mutation, including the type of mutation and the line number in which to insert it.
+
+You should choose a mutation that is sufficiently diverse from what has already been attempted (in structure or type), while prioritizing syntactic and functional utility.
+
+## INPUTS
+
+### Verilog Region
+```
+{VERILOG_REGION}
+```
+
+### Acceptable Mutations
+Below is a list of the available mutation classes, with brief descriptions of each.
+```
+{ALLOWED_MUTATIONS}
+```
+You should ensure that the mutation you choose, along with the corresponding line, is applicable within the context of the Verilog code while also trying to balance a sufficient variety of mutation classes.
+
+### Previously SUCCESSFUL Mutations
+The following mutations were already attempted within this region, and successfully produced syntactically and functionally correct results. This means they passed compilation and were able to trigger a detectable bug through the simulator. You should not repeat any of these mutations exactly.
+```
+{PREVIOUS_BUGS_SUCCESS}
+```
+
+### Previously FAILED Mutations
+The following mutations were attempted within this region, but either failed in the simulator due to a syntax error or a lack of functional utility (meaning no bug was detected). You may use this as a reference to avoid mistakes.
+```
+{PREVIOUS_BUGS_FAILED}
+```
+
+## EXPECTED OUTPUT
+Remember that a mutation is injected into only one line. Do not select a line with a mutation already injected into it (indicated by comments) unless there are no viable unaltered lines in the region. If you believe that not a single line in the provided region is capable of being mutated given any of the allowed mutation types, you can optionally choose to rollback, meaning we will retry with a different region.
+
+You will OUTPUT the following:
+1. A justification of your selection process, including the mutation type you landed on, where in the region you plan on inserting it, and whether or not you chose to rollback. 
+2. The line number (integer line number alone) of the line in which the mutation should be inserted
+3. The mutation type you have selected. This must be one of the acceptable mutations and strictly adhere to the naming conventions provided in the acceptable mutations list
+4. Whether or not we should rollback: If you decide that not a single line in the provided verilog is capable of being mutated given any of the allowed mutation types, then you can set rollback=true, and we will retry with a different region. If you choose to set this to true, the line number and mutation type do not really matter, and you can set those to any arbitrary values.
+
+## NOTES
+- Do not select a comment line for mutation insertion. (e.g., // This is a comment)
+- Do not select an empty line for mutation insertion. (e.g. adding new content to an empty line, so do not choose an empty line)
+- Do not select a line with begin and end keywords as these act as block delimiters. (e.g., begin, end)
+- Do not select an assertion line for mutation insertion. (e.g., ASSERT, assert, etc.)
+- Try to avoid lines with "`" (grave accent) as these are usually used for defining macros.
