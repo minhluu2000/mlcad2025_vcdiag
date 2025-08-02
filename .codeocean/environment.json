@@ -1,0 +1,74 @@
+{
+	"version": 1,
+	"base_image": "registry.codeocean.com/codeocean/miniconda3:4.9.2-cuda11.7.0-cudnn8-ubuntu20.04",
+	"options": {},
+	"installers": {
+		"apt": {
+			"packages": [
+				{
+					"name": "build-essential",
+					"version": "12.8ubuntu1.1"
+				},
+				{
+					"name": "cmake",
+					"version": "3.16.3-1ubuntu1.20.04.1"
+				}
+			],
+			"install_software_properties_common": true
+		},
+		"pip3": {
+			"packages": [
+				{
+					"name": "jupyter",
+					"version": "1.1.1"
+				},
+				{
+					"name": "lightgbm",
+					"version": "4.6.0"
+				},
+				{
+					"name": "natsort",
+					"version": "8.4.0"
+				},
+				{
+					"name": "numpy",
+					"version": "1.24.4"
+				},
+				{
+					"name": "pandas",
+					"version": "2.0.3"
+				},
+				{
+					"name": "scipy",
+					"version": "1.10.1"
+				},
+				{
+					"name": "seaborn",
+					"version": "0.13.2"
+				},
+				{
+					"name": "sktime",
+					"version": "0.29.1"
+				},
+				{
+					"name": "tables",
+					"version": "3.8.0"
+				},
+				{
+					"name": "tensorflow",
+					"version": "2.13.1"
+				},
+				{
+					"name": "torch",
+					"version": "2.4.1"
+				},
+				{
+					"name": "xgboost",
+					"version": "2.1.4"
+				}
+			],
+			"options": {},
+			"pre_install_options": {}
+		}
+	}
+}
