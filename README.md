@@ -1,5 +1,5 @@
-# Paper 8 - VCDiag: Classifying Erroneous Waveforms for Failure Triage Acceleration
-## Also containing codes for Paper 17 - BugGen: A Self-Correcting Multi-Agent LLM Pipeline for Realistic RTL Bug Synthesis
+# [VCDiag: Classifying Erroneous Waveforms for Failure Triage Acceleration](https://arxiv.org/abs/2506.03590)
+## [Also containing codes for BugGen: A Self-Correcting Multi-Agent LLM Pipeline for Realistic RTL Bug Synthesis](https://arxiv.org/abs/2506.10501)
 
 This document outlines the setup and usage of **VCDiag**. The workflow involves two key stages:  
 1. **Bug Injection and VCD Extraction**  
