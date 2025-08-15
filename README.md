@@ -155,7 +155,7 @@ You can modify these paths if necessary. The program will automatically clean an
 
 ## Additional Information
 
-This framework is part of an ongoing development effort. For future updates, please refer to **[our GitHub page](https://your-dataset-link.com)**.  
+This framework is part of an ongoing development effort. For future updates, please refer to **this GitHub page**.  
 
 For questions, feel free to email **minhdanhluu2000@gmail.com**. While I will do my best to respond promptly, please understand that responses may be delayed due to limited availability.  
 
